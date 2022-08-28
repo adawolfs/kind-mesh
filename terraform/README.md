@@ -7,6 +7,8 @@ Terraform is a tool for building, configuring, and deploying infrastructure.
 This configuration creates a DigitalOcean droplet with a Kubernetes cluster and a MetalLB mesh.
 
 ## Installation
+Create a new access token for the DigitalOcean API: https://docs.digitalocean.com/reference/api/create-personal-access-token/
+
 ```
 $ docker run -it --rm -v $(pwd):/mesh-kind  -w /mesh-kind --entrypoint sh hashicorp/terraform
 /mesh-kind/terraform # cd terraform
