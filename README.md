@@ -27,6 +27,11 @@ MetalLB is a Kubernetes load balancer solution for bare metal-servers clusters.
 
 This project enables `172.18.0.200-172.18.0.250` to be used as a load balancer for the k8s control-plane.
 
+## [Envoy](./envoy/README.md)
+
+Envoy is a edge and service proxy that supports HTTP/2 and GRPC, designed for Cloud Native Applications.
+
+
 ## Resources
 
 * [DigitalOcean](https://www.digitalocean.com/)
