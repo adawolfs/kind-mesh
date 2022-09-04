@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  go-envoy-deployment
+  namespace: default
+  labels:
+    app:  go-envoy
+spec:
+  selector:
+    matchLabels:
+      app: go-envoy
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app:  go-envoy
+    spec:
+      containers:
+      - name: envoy
+        image: envoyproxy/envoy:v1.23.1
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 8081
+          name: http
+        - containerPort: 9901
+          name: admin
+        livenessProbe:
+          tcpSocket:
+            port: 8081
+          initialDelaySeconds: 30
+          timeoutSeconds: 2
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: 8081          
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        volumeMounts:
+        - name: go-envoy-config
+          mountPath: /etc/envoy
+      - name:  go
+        image:  golang:alpine3.16
+        args: ["go", "run", "/app/main.go"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 5
+          timeoutSeconds: 2
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        ports:
+        - containerPort:  8080
+          name:  go
+        volumeMounts:
+        - name: go-envoy-code
+          mountPath: /app
+      volumes:
+        - name: go-envoy-code
+          configMap:
+            name: go-code-test
+        - name: go-envoy-config
+          configMap:
+            name: envoy-basic-proxy-config
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-envoy
+  namespace: default
+spec:
+  selector:
+    app: go-envoy
+  type: ClusterIP
+  sessionAffinity: None
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8081 
+    targetPort: 8081
+---

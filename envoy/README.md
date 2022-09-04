@@ -10,3 +10,18 @@ This is a basic deployment created with NGINX and Envoy, NGINX serves an index.h
 ```
 k apply -f basic-proxy.yaml
 ```
+
+
+Create a configmap from static files
+
+```
+k create configmap envoy-basic-proxy-config --from-file=envoy.yaml=basic-proxy.yaml
+```
+
+```
+k create configmap go-envoy-code --from-file=../servers/go/main.go
+k create configmap python-envoy-code --from-file=../servers/python/main.py
+k create configmap js-envoy-code --from-file=../servers/js/main.js
+```
+
+```
