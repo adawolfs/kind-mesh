@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'G.B.BOOT';
-    src: url('/static/fonts/Gbboot-ALpM.ttf');
+    src: url('../fonts/Gbboot-ALpM.ttf');
 }
 
 .gbb-font {
@@ -12,7 +12,7 @@
     font-family: 'Gill Sans';
     font-weight: bold;
     font-style: italic;
-    src: url('/static/fonts/gillsans/Gill Sans Bold Italic.otf');
+    src: url('../fonts/gillsans/Gill Sans Bold Italic.otf');
 }
 
 .gill-sans-bold-italic-font {
