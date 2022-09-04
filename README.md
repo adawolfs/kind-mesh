@@ -1,4 +1,5 @@
 # KinD Mesh
+[Slides](https://adawolfs.github.io/kind-mesh/#/0/0/0)
 
 This is a test scenario created to evaluate mesh configurations with kubernetes. It is based on the following resources:
 
