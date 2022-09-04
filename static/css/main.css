@@ -39,6 +39,11 @@
     letter-spacing: -9px !important;
 }
 
+.reveal h2 {
+    color: rgb(45, 45, 45) !important;
+    font-family: 'G.B.BOOT' !important;
+}
+
 .reveal h1 div {
     display: inline;
     font-size: large;
@@ -52,6 +57,5 @@ ul.two-column {
     columns: 2;
     -webkit-columns: 2;
     -moz-columns: 2;
-    column-gap: 100%;
-    translate: -110px;
+    column-gap: 100px;
 }
