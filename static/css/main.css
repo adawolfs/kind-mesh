@@ -1,0 +1,57 @@
+@font-face {
+    font-family: 'G.B.BOOT';
+    src: url('/static/fonts/Gbboot-ALpM.ttf');
+}
+
+.gbb-font {
+    font-family: 'G.B.BOOT' !important;
+}
+
+/* OTF Font */
+@font-face {
+    font-family: 'Gill Sans';
+    font-weight: bold;
+    font-style: italic;
+    src: url('/static/fonts/gillsans/Gill Sans Bold Italic.otf');
+}
+
+.gill-sans-bold-italic-font {
+    font-family: 'Gill Sans' !important;
+    font-weight: bold !important;
+    font-style: italic !important;
+    letter-spacing: -9px !important;
+}
+
+.reveal-viewport {
+    background: #9BBC0F !important;
+}
+
+.reveal {
+    color: rgb(45, 45, 45) !important;
+    font-family: 'G.B.BOOT' !important;
+}
+
+.reveal h1 {
+    color: rgb(45, 45, 45) !important;
+    font-family: 'Gill Sans' !important;
+    font-weight: bold !important;
+    font-style: italic !important;
+    letter-spacing: -9px !important;
+}
+
+.reveal h1 div {
+    display: inline;
+    font-size: large;
+}
+
+.reveal .controls {
+    color: rgb(45, 45, 45) !important;
+}
+
+ul.two-column {
+    columns: 2;
+    -webkit-columns: 2;
+    -moz-columns: 2;
+    column-gap: 100%;
+    translate: -110px;
+}
