@@ -89,7 +89,7 @@ spec:
       volumes:
         - name: go-envoy-code
           configMap:
-            name: go-code-test
+            name: go-envoy-code
         - name: go-envoy-config
           configMap:
             name: envoy-basic-proxy-config
@@ -103,7 +103,7 @@ metadata:
 spec:
   selector:
     app: go-envoy
-  type: ClusterIP
+  type: LoadBalancer
   sessionAffinity: None
   sessionAffinityConfig:
     clientIP:
