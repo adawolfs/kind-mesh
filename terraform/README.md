@@ -32,6 +32,11 @@ $ docker run -it --rm -v $(pwd):/mesh-kind  -w /mesh-kind --entrypoint sh hashic
 * Install metallb
 * Create a metallb configmap
 
+## Create SSH Key
+
+```
+ssh-keygen -t ed25519 -C "your_email@example.com"
+```
 
 ## Resources
 ### DigitalOcean sizes
@@ -41,7 +46,6 @@ Check sizes.json for more info.
 ```
 curl -X GET \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
-  "https://api.digitalocean.com/v2/sizes"
-
+  -H "Authorization: Bearer $TF_VAR_digitalocean_token" \
+  "https://api.digitalocean.com/v2/sizes" | jq . | less
 ```

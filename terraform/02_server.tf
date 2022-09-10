@@ -10,7 +10,7 @@ resource "digitalocean_droplet" "server" {
   # size = "s-1vcpu-1gb"
   image = "centos-stream-8-x64"
   region = "nyc3"
-  ssh_keys  = ["${digitalocean_ssh_key.adawolfs.fingerprint}", "${digitalocean_ssh_key.adawolfs-do.fingerprint}"]
+  ssh_keys  = ["${digitalocean_ssh_key.kind-mesh.fingerprint}"]
   user_data = data.template_file.user_data.rendered
 
   provisioner "file" {
