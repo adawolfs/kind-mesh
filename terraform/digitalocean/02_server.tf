@@ -29,8 +29,8 @@ resource "null_resource" "copy" {
   provisioner "local-exec" {
     command = <<EOT
       mkdir -p ~/.kube
-      rm ~/.kube/config-mesh-kind
-      scp  -o StrictHostKeyChecking=no root@${digitalocean_droplet.server.ipv4_address}:/root/.kube/config ~/.kube/config-mesh-kind
+      rm ~/.kube/config-kind-mesh
+      scp  -o StrictHostKeyChecking=no root@${digitalocean_droplet.server.ipv4_address}:/root/.kube/config ~/.kube/config-kind-mesh
     EOT
   }
 }
