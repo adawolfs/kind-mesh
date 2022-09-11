@@ -50,12 +50,12 @@ firewall-cmd --zone=public --add-forward-port=port=8081:proto=tcp:toport=8081:to
 ## Expose JS on 8082
 export JS_LB_IP=$(kubectl get service js-envoy -o json | jq -r '.status.loadBalancer.ingress[] | .ip')
 firewall-cmd --zone=public --add-port=8082/tcp --permanent   
-firewall-cmd --zone=public --add-forward-port=port=8082:proto=tcp:toport=8082:toaddr=$JS_LB_IP --permanent
+firewall-cmd --zone=public --add-forward-port=port=8082:proto=tcp:toport=8081:toaddr=$JS_LB_IP --permanent
 
 ## Expose Py on 8083
 export PY_LB_IP=$(kubectl get service py-envoy -o json | jq -r '.status.loadBalancer.ingress[] | .ip')
 firewall-cmd --zone=public --add-port=8083/tcp --permanent   
-firewall-cmd --zone=public --add-forward-port=port=8083:proto=tcp:toport=8083:toaddr=$PY_LB_IP --permanent
+firewall-cmd --zone=public --add-forward-port=port=8083:proto=tcp:toport=8081:toaddr=$PY_LB_IP --permanent
 
 ## Enable traffic on both directions
 firewall-cmd --direct --permanent --add-rule ipv4 filter FORWARD 0 -i eth0 -o $KIND_INTERFACE -j ACCEPT

@@ -112,5 +112,5 @@ spec:
   - name: http
     protocol: TCP
     port: 8081
-    targetPort: 8083
+    targetPort: 8081
 ---
