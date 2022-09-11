@@ -38,3 +38,18 @@ resource "null_resource" "copy" {
 output "instance_ip_addr" {
   value = digitalocean_droplet.server.ipv4_address
 }
+
+output "go_addr" {
+  value = "http://${digitalocean_droplet.server.ipv4_address}:8081"
+  description = "Go application address"
+}
+
+output "js_addr" {
+  value = "http://${digitalocean_droplet.server.ipv4_address}:8082"
+  description = "JS application address"
+}
+
+output "python_addr" {
+  value = "http://${digitalocean_droplet.server.ipv4_address}:8083"
+  description = "Python application address"
+}
