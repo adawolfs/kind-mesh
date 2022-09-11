@@ -16,6 +16,8 @@ install -o root -g root -m 0755 ./kubectl /usr/local/sbin/kubectl
 
 ## Clone project and create cluster
 git clone https://github.com/adawolfs/kind-mesh.git /root/kind-mesh
+export PUBLIC_IP=$(curl ifconfig.me)
+sed -i "s/0.0.0.0/$PUBLIC_IP/g" /root/kind-mesh/kind/cluster.yaml
 kind create cluster --config /root/kind-mesh/kind/cluster.yaml
 
 ## Implement MetalLB
