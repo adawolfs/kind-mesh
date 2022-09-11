@@ -2,7 +2,7 @@
 
 ## Configure docker repository and install packages
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-yum install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin firewalld git
+yum install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin firewalld git jq
 
 ## Start services
 systemctl --now enable firewalld
@@ -25,5 +25,37 @@ kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manif
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/metallb.yaml
 kubectl apply -f /root/kind-mesh/metallb/configmap.yaml
 
-export KIND_CONTROL_PLANE_PORT=$(docker inspect mesh-kind-external-load-balancer -f '{{index (index (index .NetworkSettings.Ports "6443/tcp") 0 ) "HostPort"}}')
+kubectl create configmap envoy-basic-proxy-config --from-file=envoy.yaml=/root/kind-mesh/envoy/basic-proxy.yaml
+
+kubectl apply -f /root/kind-mesh/envoy/go-envoy.yaml
+kubectl create configmap go-envoy-code --from-file=/root/kind-mesh/servers/go/main.go
+
+kubectl apply -f /root/kind-mesh/envoy/js-envoy.yaml
+kubectl create configmap js-envoy-code --from-file=/root/kind-mesh/servers/js/main.js
+
+kubectl apply -f /root/kind-mesh/envoy/py-envoy.yaml
+kubectl create configmap py-envoy-code --from-file=/root/kind-mesh/servers/go/main.py
+
+## Create variables
+export KIND_INTERFACE=$(ip -o -4 route show to 172.18.0.0/16 | awk '{print $3}')
+
+## Expose Go on 8081
+export GO_LB_IP=$(kubectl get service go-envoy -o json | jq -r '.status.loadBalancer.ingress[] | .ip')
+firewall-cmd --zone=public --add-port=8081/tcp --permanent   
+firewall-cmd --zone=public --add-forward-port=port=8081:proto=tcp:toport=8081:toaddr=$GO_LB_IP --permanent
+
+## Expose JS on 8082
+export JS_LB_IP=$(kubectl get service js-envoy -o json | jq -r '.status.loadBalancer.ingress[] | .ip')
+firewall-cmd --zone=public --add-port=8082/tcp --permanent   
+firewall-cmd --zone=public --add-forward-port=port=8082:proto=tcp:toport=8082:toaddr=$JS_LB_IP --permanent
+
+## Expose Py on 8083
+export PY_LB_IP=$(kubectl get service py-envoy -o json | jq -r '.status.loadBalancer.ingress[] | .ip')
+firewall-cmd --zone=public --add-port=8083/tcp --permanent   
+firewall-cmd --zone=public --add-forward-port=port=8083:proto=tcp:toport=8083:toaddr=$PY_LB_IP --permanent
+
+## Enable traffic on both directions
+firewall-cmd --direct --permanent --add-rule ipv4 filter FORWARD 0 -i eth0 -o $KIND_INTERFACE -j ACCEPT
+firewall-cmd --direct --permanent --add-rule ipv4 filter FORWARD 0 -i $KIND_INTERFACE -o eth0 -j ACCEPT
+firewall-cmd --reload
 
