@@ -23,7 +23,16 @@ resource "digitalocean_droplet" "server" {
     user        = "root"
     # private_key = file("../ssh-key")
   }
+}
 
+resource "null_resource" "copy" {
+  provisioner "local-exec" {
+    command = <<EOT
+      mkdir -p ~/.kube
+      rm ~/.kube/config-mesh-kind
+      scp  -o StrictHostKeyChecking=no root@${digitalocean_droplet.server.ipv4_address}:/root/.kube/config ~/.kube/config-mesh-kind
+    EOT
+  }
 }
 
 output "instance_ip_addr" {
