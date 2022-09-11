@@ -34,7 +34,10 @@ kubectl apply -f /root/kind-mesh/envoy/js-envoy.yaml
 kubectl create configmap js-envoy-code --from-file=/root/kind-mesh/servers/js/main.js
 
 kubectl apply -f /root/kind-mesh/envoy/py-envoy.yaml
-kubectl create configmap py-envoy-code --from-file=/root/kind-mesh/servers/go/main.py
+kubectl create configmap py-envoy-code --from-file=/root/kind-mesh/servers/py/main.py
+
+## Wait for MetalLB to be ready
+sleep 30
 
 ## Create variables
 export KIND_INTERFACE=$(ip -o -4 route show to 172.18.0.0/16 | awk '{print $3}')
