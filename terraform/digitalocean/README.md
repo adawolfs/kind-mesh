@@ -20,8 +20,8 @@ $ ssh-keygen -t ed25519 -C "kind-mesh@digitalocean.com" -q -N '' -f ssh-key
 ### Inicializar terraform
 ```
 /kind-mesh/terraform # cd digitalocean
-/kind-mesh/terraform # export TF_VAR_digitalocean_token="dop_v1_...."
-/kind-mesh/terraform # terraform apply
+/kind-mesh/terraform/digitalocean # export TF_VAR_digitalocean_token="dop_v1_...."
+/kind-mesh/terraform/digitalocean # terraform apply
 ```
 
 ## Steps
@@ -53,5 +53,5 @@ curl -X GET \
 
 ## Destroy
 ```
-/kind-mesh/terraform # terraform destroy
+/kind-mesh/terraform/digitalocean # terraform destroy
 ```
