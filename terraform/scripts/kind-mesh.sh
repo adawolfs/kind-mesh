@@ -6,8 +6,8 @@ sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/dock
 sudo yum install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin git jq firewalld
 
 ## Start services
-sudo systemctl --now enable docker
 sudo systemctl --now enable firewalld
+sudo systemctl --now enable docker
 
 ## Install kind and kubectl
 curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.14.0/kind-linux-amd64
@@ -44,24 +44,22 @@ sleep 30
 ## Create variables
 export KIND_INTERFACE=$(ip -o -4 route show to 172.18.0.0/16 | awk '{print $3}')
 
-
 ## Expose Go on 8081
-export GO_LB_IP=$(kubectl get service go-envoy -o json | jq -r '.status.loadBalancer.ingress[] | .ip')
-firewall-cmd --add-port=8081/tcp --permanent   
-firewall-cmd --add-forward-port=port=8081:proto=tcp:toport=8081:toaddr=$GO_LB_IP --permanent
+export GO_LB_IP=$(sudo kubectl get service go-envoy -o json | jq -r '.status.loadBalancer.ingress[] | .ip')
+sudo firewall-cmd --add-port=8081/tcp --permanent   
+sudo firewall-cmd --add-forward-port=port=8081:proto=tcp:toport=8081:toaddr=$GO_LB_IP --permanent
 
 ## Expose JS on 8082
-export JS_LB_IP=$(kubectl get service js-envoy -o json | jq -r '.status.loadBalancer.ingress[] | .ip')
-firewall-cmd --add-port=8082/tcp --permanent   
-firewall-cmd --add-forward-port=port=8082:proto=tcp:toport=8081:toaddr=$JS_LB_IP --permanent
+export JS_LB_IP=$(sudo kubectl get service js-envoy -o json | jq -r '.status.loadBalancer.ingress[] | .ip')
+sudo firewall-cmd --add-port=8082/tcp --permanent   
+sudo firewall-cmd --add-forward-port=port=8082:proto=tcp:toport=8081:toaddr=$JS_LB_IP --permanent
 
 ## Expose Py on 8083
-export PY_LB_IP=$(kubectl get service py-envoy -o json | jq -r '.status.loadBalancer.ingress[] | .ip')
-firewall-cmd --add-port=8083/tcp --permanent   
-firewall-cmd --add-forward-port=port=8083:proto=tcp:toport=8081:toaddr=$PY_LB_IP --permanent
+export PY_LB_IP=$(sudo kubectl get service py-envoy -o json | jq -r '.status.loadBalancer.ingress[] | .ip')
+sudo firewall-cmd --add-port=8083/tcp --permanent   
+sudo firewall-cmd --add-forward-port=port=8083:proto=tcp:toport=8081:toaddr=$PY_LB_IP --permanent
 
 ## Enable traffic on both directions
-firewall-cmd --direct --permanent --add-rule ipv4 filter FORWARD 0 -i eth0 -o $KIND_INTERFACE -j ACCEPT
-firewall-cmd --direct --permanent --add-rule ipv4 filter FORWARD 0 -i $KIND_INTERFACE -o eth0 -j ACCEPT
-firewall-cmd --reload
-
+sudo firewall-cmd --direct --permanent --add-rule ipv4 filter FORWARD 0 -i eth0 -o $KIND_INTERFACE -j ACCEPT
+sudo firewall-cmd --direct --permanent --add-rule ipv4 filter FORWARD 0 -i $KIND_INTERFACE -o eth0 -j ACCEPT
+sudo firewall-cmd --reload

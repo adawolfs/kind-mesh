@@ -42,16 +42,6 @@ resource "google_compute_instance" "server" {
   }
 }
 
-resource "null_resource" "copy" {
-  provisioner "local-exec" {
-    command = <<EOT
-      mkdir -p ~/.kube
-      rm ~/.kube/config-kind-mesh
-      scp -i ../ssh-key -o StrictHostKeyChecking=no root@${google_compute_instance.server.network_interface.0.access_config.0.nat_ip}:/root/.kube/config ~/.kube/config-kind-mesh
-    EOT
-  }
-}
-
 output "instance_ip_addr" {
   value = google_compute_instance.server.network_interface[0].access_config[0].nat_ip
 }
