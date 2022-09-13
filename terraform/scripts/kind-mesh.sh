@@ -3,10 +3,11 @@
 ## Configure docker repository and install packages
 sudo yum install -y yum-utils
 sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-sudo yum install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin git jq
+sudo yum install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin git jq firewalld
 
 ## Start services
 sudo systemctl --now enable docker
+sudo systemctl --now enable firewalld
 
 ## Install kind and kubectl
 curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.14.0/kind-linux-amd64
