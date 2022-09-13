@@ -1,6 +1,11 @@
-#terraform igore
+## Terraform ignore
 **/.terraform
 **/terraform.tfstate
 **/terraform.tfstate.backup
 **/.terraform.lock.hcl
 **/.terraform.tfstate.lock.info
+
+## SSH keys
+ssh-key*
+
+credentials.json
