@@ -1,17 +1,11 @@
-variable "ssh_key_path" {
-}
-
-variable "ssh_pub_key_path" {
-}
-
-// Create compute instance
 resource "google_compute_instance" "server" {
-  name         = "server"
-  machine_type = "n1-standard-4"
-  zone         = "us-east1-b"
+  name         = var.instance_name
+  machine_type = var.instance_type
+  zone         = var.zone
   
   metadata = {
-    ssh-keys = "adawolfs:${file(var.ssh_pub_key_path)}"
+    # ssh-keys = "${var.ssh_user}:${file(var.ssh_pub_key_path)}"
+    enable-oslogin = "TRUE"
   }
 
   tags = ["kind-mesh"]
@@ -29,7 +23,7 @@ resource "google_compute_instance" "server" {
   connection {
     type        = "ssh"
     host        = self.network_interface[0].access_config[0].nat_ip
-    user        = "adawolfs"
+    user        = var.ssh_posix_user
     private_key = file(var.ssh_key_path)
   }
 

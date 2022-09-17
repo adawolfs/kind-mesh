@@ -29,6 +29,7 @@ gcloud services list
 ## Enable services
 ```bash
 gcloud services enable compute.googleapis.com
+gcloud services enable cloudresourcemanager.googleapis.com
 ```
 
 ## Create Service account
@@ -69,7 +70,24 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
     --role="roles/compute.admin"
 ```
 
+## Create infrastructure with Terraform
+```bash
+terraform init
+terraform plan
+terraform apply
+```
 ## List Compute Instances
 ```bash
 gcloud compute instances list
+```
+
+## SSH into Compute Instance
+```bash
+export COMPUTE_INSTANCE="server"
+export PROJECT_ZONE="us-east1-b"
+ssh -i ssh-key sa_$(gcloud iam service-accounts describe \
+    $SA_NAME@$(gcloud config get-value project).iam.gserviceaccount.com \
+    --format='value(oauth2ClientId)')@$(gcloud compute instances describe $COMPUTE_INSTANCE \
+    --zone $PROJECT_ZONE \
+    --format='value(networkInterfaces[0].accessConfigs[0].natIP)')
 ```

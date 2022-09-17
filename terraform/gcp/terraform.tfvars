@@ -1,4 +1,8 @@
 project_id = "kind-mesh-1"
 region = "us-east1"
+zone = "us-east1-b"
+instance_type = "e2-standard-4"
+instance_name = "server"
+ssh_posix_user = "sa_118076293578583375883"
 ssh_key_path = "../ssh-key"
 ssh_pub_key_path = "../ssh-key.pub"
